@@ -1,0 +1,42 @@
+{
+  "template_id": "event_announcement",
+  "description": "Upcoming event promotion post",
+  "is_carousel": false,
+  "fields": {
+    "headline": {
+      "type": "text",
+      "required": true,
+      "max_chars": 40,
+      "description": "Main event name, punchy. e.g. 'Annual Sports Day 2025'"
+    },
+    "event_date": {
+      "type": "text",
+      "required": true,
+      "max_chars": 30,
+      "description": "Date string. e.g. '15th August, 2025'"
+    },
+    "event_time": {
+      "type": "text",
+      "required": false,
+      "max_chars": 20,
+      "description": "e.g. '9:00 AM onwards'"
+    },
+    "subheadline": {
+      "type": "text",
+      "required": false,
+      "max_chars": 90,
+      "description": "One supporting line. e.g. 'All parents and guardians are warmly invited.'"
+    },
+    "hero_image_path": {
+      "type": "image_path",
+      "required": false,
+      "description": "Optional background photo relevant to the event. Leave empty for graphic-only design."
+    },
+    "event_label": {
+      "type": "text",
+      "required": false,
+      "max_chars": 20,
+      "description": "Small eyebrow label above headline. e.g. 'COMING SOON' or 'SAVE THE DATE'"
+    }
+  }
+}

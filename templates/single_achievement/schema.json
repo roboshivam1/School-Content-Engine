@@ -1,0 +1,42 @@
+{
+  "template_id": "single_achievement",
+  "description": "Spotlight on one student or teacher achievement",
+  "is_carousel": false,
+  "fields": {
+    "student_name": {
+      "type": "text",
+      "required": true,
+      "max_chars": 40,
+      "description": "Full name of the achiever"
+    },
+    "achievement": {
+      "type": "text",
+      "required": true,
+      "max_chars": 80,
+      "description": "What they achieved. e.g. 'AIR 142 in JEE Advanced 2025' or 'Gold Medal at State Science Olympiad'"
+    },
+    "class_section": {
+      "type": "text",
+      "required": false,
+      "max_chars": 20,
+      "description": "e.g. 'Class XII - A'"
+    },
+    "photo_path": {
+      "type": "image_path",
+      "required": false,
+      "description": "Portrait photo of the achiever"
+    },
+    "quote": {
+      "type": "text",
+      "required": false,
+      "max_chars": 120,
+      "description": "Optional short quote from the student or an inspirational line"
+    },
+    "headline": {
+      "type": "text",
+      "required": true,
+      "max_chars": 35,
+      "description": "Big banner text. e.g. 'We are proud.' or 'Excellence, delivered.'"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "template_id": "multiple_achievement",
+  "description": "Multiple students achievement list — board results, toppers, competition winners",
+  "is_carousel": false,
+  "carousel_notes": "If students list > 6, the render agent will automatically chunk into multiple slides.",
+  "fields": {
+    "headline": {
+      "type": "text",
+      "required": true,
+      "max_chars": 40,
+      "description": "e.g. 'Our JEE Stars 2025' or 'Board Toppers — Class XII'"
+    },
+    "subheadline": {
+      "type": "text",
+      "required": false,
+      "max_chars": 80,
+      "description": "e.g. 'Congratulations to our brilliant achievers!'"
+    },
+    "students": {
+      "type": "array",
+      "required": true,
+      "description": "List of students. Can be 2-20, layout auto-adjusts.",
+      "item_schema": {
+        "name": {
+          "type": "text",
+          "required": true,
+          "max_chars": 30
+        },
+        "score_or_rank": {
+          "type": "text",
+          "required": true,
+          "max_chars": 20,
+          "description": "e.g. '98.4%' or 'AIR 289'"
+        },
+        "class_section": {
+          "type": "text",
+          "required": false,
+          "max_chars": 15
+        },
+        "photo_path": {
+          "type": "image_path",
+          "required": false
+        }
+      }
+    }
+  }
+}

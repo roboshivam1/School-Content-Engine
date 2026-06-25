@@ -1,0 +1,54 @@
+{
+  "template_id": "event_recap",
+  "description": "Post-event carousel with photos",
+  "is_carousel": true,
+  "carousel_notes": "First slide is always the cover (headline + hero photo). Middle slides are photo + caption pairs. Last slide is always the branded closing slide.",
+  "fields": {
+    "event_name": {
+      "type": "text",
+      "required": true,
+      "max_chars": 50,
+      "description": "Full event name. e.g. 'Annual Sports Day 2025'"
+    },
+    "event_date_str": {
+      "type": "text",
+      "required": false,
+      "max_chars": 30,
+      "description": "e.g. '20th June, 2025'"
+    },
+    "cover_headline": {
+      "type": "text",
+      "required": true,
+      "max_chars": 45,
+      "description": "Big punchy headline for the first slide. e.g. 'Champions are made here.'"
+    },
+    "cover_image_path": {
+      "type": "image_path",
+      "required": true,
+      "description": "Best photo from the event for the cover slide"
+    },
+    "slides": {
+      "type": "array",
+      "required": true,
+      "description": "List of inner slides. Each slide has image_path and caption.",
+      "item_schema": {
+        "image_path": {
+          "type": "image_path",
+          "required": true
+        },
+        "caption": {
+          "type": "text",
+          "required": true,
+          "max_chars": 80,
+          "description": "Short slide caption. e.g. 'The 100m sprint — nothing but heart.'"
+        }
+      }
+    },
+    "closing_message": {
+      "type": "text",
+      "required": false,
+      "max_chars": 100,
+      "description": "Final slide message. e.g. 'Thank you to every student, teacher, and parent who made this day unforgettable.'"
+    }
+  }
+}

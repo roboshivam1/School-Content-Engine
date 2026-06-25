@@ -1,0 +1,42 @@
+/*
+  _base/base.css
+  Shared CSS reset and utility classes included in every template.
+  Templates @import this or copy the reset block.
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow: hidden;   /* critical — prevents scrollbars appearing in screenshot */
+}
+
+/* Utility: full bleed image that covers its container */
+.img-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Utility: overlay layer */
+.overlay {
+  position: absolute;
+  inset: 0;
+}
+
+/* Utility: flex centering */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Utility: text shadow for legibility on photos */
+.text-shadow {
+  text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+}

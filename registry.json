@@ -1,0 +1,34 @@
+{
+  "templates": [
+    {
+      "id": "event_announcement",
+      "use_when": "Promoting an upcoming event — anything that has NOT happened yet. Sports day, annual day, PTM, fair, competition, exam dates.",
+      "variants": ["instagram_square", "instagram_story"],
+      "schema_path": "templates/event_announcement/schema.json"
+    },
+    {
+      "id": "event_recap",
+      "use_when": "Post-event coverage with photos from an event that already happened. Use this most often for school events.",
+      "variants": ["instagram_square", "instagram_carousel", "instagram_story"],
+      "schema_path": "templates/event_recap/schema.json"
+    },
+    {
+      "id": "single_achievement",
+      "use_when": "One student or one teacher achieved something notable — rank, award, competition win, selection.",
+      "variants": ["instagram_square", "instagram_story"],
+      "schema_path": "templates/single_achievement/schema.json"
+    },
+    {
+      "id": "multiple_achievement",
+      "use_when": "Multiple students achieved something — board toppers, JEE/NEET results, competition podium, merit list.",
+      "variants": ["instagram_square", "instagram_story"],
+      "schema_path": "templates/multiple_achievement/schema.json"
+    },
+    {
+      "id": "festival_greeting",
+      "use_when": "Festival or national holiday wishes — Diwali, Holi, Independence Day, Republic Day, Teachers Day, etc.",
+      "variants": ["instagram_square", "instagram_story"],
+      "schema_path": "templates/festival_greeting/schema.json"
+    }
+  ]
+}
