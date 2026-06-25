@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="{{ fonts.google_fonts_url }}" rel="stylesheet">
+<style>
+  :root {
+    --c-primary:      {{ colors.primary }};
+    --c-primary-dark: {{ colors.primary_dark }};
+    --c-secondary:    {{ colors.secondary }};
+    --c-accent:       {{ colors.accent }};
+    --c-white:        {{ colors.white }};
+    --c-text-dark:    {{ colors.text_dark }};
+    --c-overlay-mid:  {{ colors.overlay_mid }};
+    --f-headline: '{{ fonts.headline }}', serif;
+    --f-body:     '{{ fonts.body }}', sans-serif;
+    --f-label:    '{{ fonts.label }}', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  body { width: 1080px; height: 1080px; overflow: hidden; }
+
+  .slide {
+    width: 1080px;
+    height: 1080px;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--f-body);
+    background: var(--c-primary-dark);
+  }
+
+  /* Top photo panel — 60% of height */
+  .photo-panel {
+    position: relative;
+    width: 1080px;
+    height: 648px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .photo-panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .photo-fallback {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
+  }
+
+  /* Subtle logo watermark top-left */
+  .photo-logo {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    height: 52px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 6px rgba(0,0,0,0.5));
+    opacity: 0.9;
+  }
+
+  /* Slide number badge top-right */
+  .slide-badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: var(--c-accent);
+    color: var(--c-text-dark);
+    font-family: var(--f-label);
+    font-weight: 700;
+    font-size: 17px;
+    padding: 6px 16px;
+    border-radius: 100px;
+  }
+
+  /* Bottom content panel — remaining 40% */
+  .content-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 36px 52px 28px;
+    position: relative;
+  }
+
+  /* Left accent bar inside content panel */
+  .content-panel::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: linear-gradient(to bottom, var(--c-accent), var(--c-primary));
+  }
+
+  .caption {
+    font-family: var(--f-body);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.5;
+    color: var(--c-white);
+    margin-bottom: 24px;
+    max-width: 880px;
+  }
+
+  .caption em {
+    font-style: italic;
+    color: var(--c-secondary);
+    font-family: var(--f-headline);
+  }
+
+  .bottom-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .school-name {
+    font-family: var(--f-label);
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .swipe-hint {
+    font-family: var(--f-label);
+    font-size: 15px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--c-accent);
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- Photo panel -->
+  <div class="photo-panel">
+    {% if image_b64 %}
+      <img src="{{ image_b64 }}" alt="Event moment">
+    {% else %}
+      <div class="photo-fallback"></div>
+    {% endif %}
+
+    {% if logo_b64 %}
+      <img class="photo-logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
+    {% endif %}
+
+    {% if slide_number and total_slides %}
+      <span class="slide-badge">{{ slide_number }} / {{ total_slides }}</span>
+    {% endif %}
+  </div>
+
+  <!-- Content panel -->
+  <div class="content-panel">
+    <p class="caption">{{ caption }}</p>
+    <div class="bottom-strip">
+      <span class="school-name">{{ school_name }}</span>
+      {% if slide_number and total_slides and slide_number < total_slides %}
+        <span class="swipe-hint">Swipe →</span>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

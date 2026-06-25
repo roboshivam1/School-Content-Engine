@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="{{ fonts.google_fonts_url }}" rel="stylesheet">
+<style>
+  :root {
+    --c-primary:      {{ colors.primary }};
+    --c-primary-dark: {{ colors.primary_dark }};
+    --c-secondary:    {{ colors.secondary }};
+    --c-accent:       {{ colors.accent }};
+    --c-white:        {{ colors.white }};
+    --c-off-white:    {{ colors.off_white }};
+    --c-text-dark:    {{ colors.text_dark }};
+    --f-headline: '{{ fonts.headline }}', serif;
+    --f-body:     '{{ fonts.body }}', sans-serif;
+    --f-label:    '{{ fonts.label }}', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  body { width: 1080px; height: 1080px; overflow: hidden; }
+
+  .slide {
+    width: 1080px;
+    height: 1080px;
+    position: relative;
+    font-family: var(--f-body);
+    background: var(--c-off-white);
+  }
+
+  /* Top brand band */
+  .top-band {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 420px;
+    background: linear-gradient(135deg, var(--c-primary-dark) 0%, var(--c-primary) 100%);
+  }
+
+  /* Decorative circle — sits behind photo, partially cut off */
+  .deco-circle {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    border: 3px solid var(--c-accent);
+    opacity: 0.2;
+    top: 80px;
+    right: -80px;
+  }
+
+  .accent-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 8px;
+    background: linear-gradient(to bottom, var(--c-accent), var(--c-primary));
+    z-index: 10;
+  }
+
+  /* School branding top-right */
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 32px 44px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 5;
+  }
+
+  .logo {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+
+  .school-label {
+    font-family: var(--f-label);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* Student photo — circle, centered */
+  .photo-wrap {
+    position: absolute;
+    top: 160px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    border: 6px solid var(--c-white);
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    z-index: 5;
+    background: var(--c-secondary);
+  }
+
+  .photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  /* Gold star badge on photo */
+  .star-badge {
+    position: absolute;
+    top: 152px;
+    right: calc(50% - 160px);
+    width: 72px;
+    height: 72px;
+    background: var(--c-accent);
+    border-radius: 50%;
+    border: 4px solid var(--c-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+    font-size: 32px;
+  }
+
+  /* Content below photo */
+  .content {
+    position: absolute;
+    top: 490px;
+    left: 0; right: 0;
+    padding: 0 60px;
+    text-align: center;
+    z-index: 5;
+  }
+
+  .headline {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 52px;
+    color: var(--c-primary-dark);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 4px;
+    background: var(--c-accent);
+    border-radius: 2px;
+    margin: 0 auto 24px;
+  }
+
+  .student-name {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 62px;
+    color: var(--c-primary-dark);
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+
+  .class-section {
+    font-family: var(--f-label);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--c-primary);
+    margin-bottom: 20px;
+  }
+
+  .achievement {
+    font-family: var(--f-body);
+    font-size: 26px;
+    line-height: 1.45;
+    color: #444;
+    font-weight: 500;
+    max-width: 760px;
+    margin: 0 auto 20px;
+  }
+
+  .quote {
+    font-family: var(--f-headline);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--c-primary);
+    opacity: 0.75;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="top-band"></div>
+  <div class="deco-circle"></div>
+  <div class="accent-bar"></div>
+
+  <div class="top-bar">
+    {% if logo_b64 %}
+      <img class="logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
+    {% endif %}
+    <span class="school-label">{{ school_name }}</span>
+  </div>
+
+  <div class="photo-wrap">
+    {% if photo_b64 %}
+      <img src="{{ photo_b64 }}" alt="{{ student_name }}">
+    {% endif %}
+  </div>
+  <div class="star-badge">⭐</div>
+
+  <div class="content">
+    <div class="headline">{{ headline }}</div>
+    <div class="divider"></div>
+    <div class="student-name">{{ student_name }}</div>
+    {% if class_section %}
+      <div class="class-section">{{ class_section }}</div>
+    {% endif %}
+    <div class="achievement">{{ achievement }}</div>
+    {% if quote %}
+      <div class="quote">"{{ quote }}"</div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>

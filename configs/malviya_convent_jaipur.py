@@ -16,7 +16,7 @@ SCHOOL_CONFIG = {
     "tagline":          "Satyameva Jayate",          # सत्यमेव जयते
     "tagline_hindi":    "सत्यमेव जयते",
     "established":      None,                         # fill if known
-    "website":          "mcsjaipur.com",                         # fill when available
+    "website":          None,                         # fill when available
     "email":            None,
 
     # -------------------------------------------------------------------------
@@ -32,6 +32,12 @@ SCHOOL_CONFIG = {
         "text_dark":    "#1A0A12",   # near-black with a warm magenta undertone
         "text_light":   "#FFFFFF",   # for text on dark/magenta backgrounds
         "overlay":      "rgba(192, 23, 125, 0.72)",  # magenta overlay on photos
+
+        # Pre-computed overlay variants (primary_dark = #7A0E50 = rgb(122,14,80))
+        # Used in CSS gradients — avoids concatenating hex + alpha in templates
+        "overlay_dark":  "rgba(122, 14, 80, 0.95)",
+        "overlay_mid":   "rgba(122, 14, 80, 0.75)",
+        "overlay_light": "rgba(122, 14, 80, 0.35)",
     },
 
     # -------------------------------------------------------------------------

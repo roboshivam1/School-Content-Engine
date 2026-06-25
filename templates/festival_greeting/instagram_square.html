@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="{{ fonts.google_fonts_url }}" rel="stylesheet">
+<style>
+  :root {
+    --c-primary:      {{ colors.primary }};
+    --c-primary-dark: {{ colors.primary_dark }};
+    --c-secondary:    {{ colors.secondary }};
+    --c-accent:       {{ colors.accent }};
+    --c-white:        {{ colors.white }};
+    --c-text-dark:    {{ colors.text_dark }};
+    --f-headline: '{{ fonts.headline }}', serif;
+    --f-body:     '{{ fonts.body }}', sans-serif;
+    --f-label:    '{{ fonts.label }}', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  body { width: 1080px; height: 1080px; overflow: hidden; }
+
+  .slide {
+    width: 1080px;
+    height: 1080px;
+    position: relative;
+    font-family: var(--f-body);
+    background: linear-gradient(145deg, var(--c-primary-dark) 0%, #3D0B30 50%, var(--c-primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Decorative border frame */
+  .frame-outer {
+    position: absolute;
+    inset: 28px;
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+  }
+
+  .frame-inner {
+    position: absolute;
+    inset: 44px;
+    border: 1px solid var(--c-accent);
+    opacity: 0.3;
+    border-radius: 4px;
+  }
+
+  /* Corner ornaments */
+  .corner-ornament {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: var(--c-accent);
+    border-style: solid;
+    opacity: 0.7;
+  }
+  .co-tl { top: 56px; left: 56px; border-width: 3px 0 0 3px; }
+  .co-tr { top: 56px; right: 56px; border-width: 3px 3px 0 0; }
+  .co-bl { bottom: 56px; left: 56px; border-width: 0 0 3px 3px; }
+  .co-br { bottom: 56px; right: 56px; border-width: 0 3px 3px 0; }
+
+  /* Decorative glow circles */
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .glow-1 {
+    width: 500px; height: 500px;
+    background: var(--c-primary);
+    opacity: 0.35;
+    top: -100px; right: -100px;
+  }
+  .glow-2 {
+    width: 400px; height: 400px;
+    background: var(--c-accent);
+    opacity: 0.12;
+    bottom: -80px; left: -80px;
+  }
+
+  /* Content */
+  .content {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 80px;
+    gap: 0;
+  }
+
+  .logo {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 36px;
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.4));
+  }
+
+  .festival-label {
+    font-family: var(--f-label);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--c-accent);
+    margin-bottom: 16px;
+  }
+
+  .festival-name {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 96px;
+    line-height: 1.0;
+    color: var(--c-white);
+    margin-bottom: 8px;
+  }
+
+  .year {
+    font-family: var(--f-label);
+    font-size: 26px;
+    color: var(--c-accent);
+    letter-spacing: 4px;
+    margin-bottom: 36px;
+  }
+
+  /* Decorative divider with diamond */
+  .deco-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .deco-line { width: 80px; height: 1px; background: var(--c-accent); opacity: 0.6; }
+  .deco-diamond {
+    width: 10px; height: 10px;
+    background: var(--c-accent);
+    transform: rotate(45deg);
+  }
+
+  .greeting {
+    font-family: var(--f-body);
+    font-size: 28px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.8);
+    max-width: 700px;
+    margin-bottom: 24px;
+  }
+
+  .hindi-greeting {
+    font-family: var(--f-body);
+    font-size: 28px;
+    line-height: 1.5;
+    color: var(--c-secondary);
+    font-style: italic;
+    margin-bottom: 36px;
+  }
+
+  .school-name {
+    font-family: var(--f-label);
+    font-size: 16px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="frame-outer"></div>
+  <div class="frame-inner"></div>
+  <div class="corner-ornament co-tl"></div>
+  <div class="corner-ornament co-tr"></div>
+  <div class="corner-ornament co-bl"></div>
+  <div class="corner-ornament co-br"></div>
+
+  <div class="content">
+    {% if logo_b64 %}
+      <img class="logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
+    {% endif %}
+
+    <div class="festival-label">Warm Wishes</div>
+    <div class="festival-name">{{ festival_name }}</div>
+    {% if year %}
+      <div class="year">{{ year }}</div>
+    {% endif %}
+
+    <div class="deco-divider">
+      <div class="deco-line"></div>
+      <div class="deco-diamond"></div>
+      <div class="deco-line"></div>
+    </div>
+
+    <div class="greeting">{{ greeting_line }}</div>
+
+    {% if hindi_greeting %}
+      <div class="hindi-greeting">{{ hindi_greeting }}</div>
+    {% endif %}
+
+    <div class="school-name">{{ school_name }}</div>
+  </div>
+</div>
+</body>
+</html>

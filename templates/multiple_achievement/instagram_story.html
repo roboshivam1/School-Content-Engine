@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="{{ fonts.google_fonts_url }}" rel="stylesheet">
+<style>
+  :root {
+    --c-primary:      {{ colors.primary }};
+    --c-primary-dark: {{ colors.primary_dark }};
+    --c-secondary:    {{ colors.secondary }};
+    --c-accent:       {{ colors.accent }};
+    --c-white:        {{ colors.white }};
+    --c-off-white:    {{ colors.off_white }};
+    --c-text-dark:    {{ colors.text_dark }};
+    --f-headline: '{{ fonts.headline }}', serif;
+    --f-body:     '{{ fonts.body }}', sans-serif;
+    --f-label:    '{{ fonts.label }}', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  body { width: 1080px; height: 1920px; overflow: hidden; }
+
+  /* Story uses a vertical list layout — better for many students on phone screens */
+  .slide {
+    width: 1080px;
+    height: 1920px;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--f-body);
+    background: linear-gradient(160deg, var(--c-primary-dark) 0%, #200520 100%);
+  }
+
+  .accent-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 10px;
+    background: linear-gradient(to bottom, var(--c-accent), var(--c-primary));
+    z-index: 10;
+  }
+
+  /* Top section */
+  .top-section {
+    padding: 64px 60px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex-shrink: 0;
+  }
+
+  .top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+  }
+
+  .logo {
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .school-label {
+    font-family: var(--f-label);
+    font-size: 17px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .headline {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 80px;
+    line-height: 1.05;
+    color: var(--c-white);
+    margin-bottom: 12px;
+  }
+
+  .subheadline {
+    font-family: var(--f-body);
+    font-size: 28px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  /* Accent divider */
+  .divider {
+    width: 80px;
+    height: 5px;
+    background: var(--c-accent);
+    border-radius: 3px;
+    margin-top: 20px;
+  }
+
+  /* Students list */
+  .list-area {
+    flex: 1;
+    padding: 8px 60px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    gap: 24px;
+  }
+
+  .row:last-child { border-bottom: none; }
+
+  /* Rank number or photo */
+  .rank-num {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--c-accent);
+    min-width: 48px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .row-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--c-secondary);
+    flex-shrink: 0;
+  }
+
+  .row-photo-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 3px solid rgba(255,255,255,0.15);
+    flex-shrink: 0;
+  }
+
+  .row-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .row-name {
+    font-family: var(--f-body);
+    font-weight: 600;
+    font-size: 30px;
+    color: var(--c-white);
+    line-height: 1.2;
+  }
+
+  .row-class {
+    font-family: var(--f-label);
+    font-size: 16px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .row-score {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 36px;
+    color: var(--c-accent);
+    flex-shrink: 0;
+  }
+
+  /* Bottom */
+  .bottom-band {
+    height: 60px;
+    background: var(--c-primary);
+    display: flex;
+    align-items: center;
+    padding: 0 60px;
+    flex-shrink: 0;
+  }
+
+  .bottom-band span {
+    font-family: var(--f-label);
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="accent-bar"></div>
+
+  <div class="top-section">
+    <div class="top-row">
+      {% if logo_b64 %}
+        <img class="logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
+      {% endif %}
+      <span class="school-label">{{ school_name }}</span>
+    </div>
+    <div class="headline">{{ headline }}</div>
+    {% if subheadline %}
+      <div class="subheadline">{{ subheadline }}</div>
+    {% endif %}
+    <div class="divider"></div>
+  </div>
+
+  <div class="list-area">
+    {% for student in students %}
+    <div class="row">
+      <span class="rank-num">{{ loop.index }}</span>
+
+      {% if student.photo_b64 %}
+        <img class="row-photo" src="{{ student.photo_b64 }}" alt="{{ student.name }}">
+      {% else %}
+        <div class="row-photo-placeholder"></div>
+      {% endif %}
+
+      <div class="row-info">
+        <span class="row-name">{{ student.name }}</span>
+        {% if student.class_section %}
+          <span class="row-class">{{ student.class_section }}</span>
+        {% endif %}
+      </div>
+
+      <span class="row-score">{{ student.score_or_rank }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="bottom-band">
+    <span>{{ school_name }}</span>
+  </div>
+</div>
+</body>
+</html>

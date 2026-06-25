@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="{{ fonts.google_fonts_url }}" rel="stylesheet">
+<style>
+  /* ── All Jinja2 interpolation lives ONLY in :root — rest is pure CSS ── */
+  :root {
+    --c-primary:       {{ colors.primary }};
+    --c-primary-dark:  {{ colors.primary_dark }};
+    --c-secondary:     {{ colors.secondary }};
+    --c-accent:        {{ colors.accent }};
+    --c-white:         {{ colors.white }};
+    --c-text-dark:     {{ colors.text_dark }};
+    --c-overlay-dark:  {{ colors.overlay_dark }};
+    --c-overlay-mid:   {{ colors.overlay_mid }};
+    --c-overlay-light: {{ colors.overlay_light }};
+    --f-headline: '{{ fonts.headline }}', serif;
+    --f-body:     '{{ fonts.body }}', sans-serif;
+    --f-label:    '{{ fonts.label }}', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  body { width: 1080px; height: 1080px; overflow: hidden; background: #111; }
+
+  .slide {
+    width: 1080px;
+    height: 1080px;
+    position: relative;
+    overflow: hidden;
+    font-family: var(--f-body);
+  }
+
+  .hero {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .hero-fallback {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--c-primary-dark) 0%, var(--c-primary) 100%);
+  }
+
+  .gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent          0%,
+      transparent         28%,
+      var(--c-overlay-mid) 60%,
+      var(--c-overlay-dark) 100%
+    );
+  }
+
+  .accent-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 8px;
+    background: linear-gradient(to bottom, var(--c-accent), var(--c-primary));
+    z-index: 10;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 36px 44px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 5;
+  }
+
+  .logo {
+    height: 72px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+  }
+
+  .school-label {
+    font-family: var(--f-label);
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--c-secondary);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+  }
+
+  .bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0 52px 52px;
+    z-index: 5;
+  }
+
+  .event-eyebrow {
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--c-accent);
+    margin-bottom: 16px;
+  }
+
+  .headline {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 72px;
+    line-height: 1.1;
+    color: var(--c-white);
+    text-shadow: 0 3px 16px rgba(0,0,0,0.4);
+    margin-bottom: 24px;
+    max-width: 820px;
+    white-space: pre-line;
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .date-pill {
+    background: var(--c-accent);
+    color: var(--c-text-dark);
+    font-family: var(--f-label);
+    font-weight: 700;
+    font-size: 17px;
+    padding: 8px 22px;
+    border-radius: 100px;
+  }
+
+  .swipe-hint {
+    color: rgba(255,255,255,0.6);
+    font-family: var(--f-body);
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="accent-bar"></div>
+
+  {% if cover_image_b64 %}
+    <img class="hero" src="{{ cover_image_b64 }}" alt="Event photo">
+  {% else %}
+    <div class="hero-fallback"></div>
+  {% endif %}
+
+  <div class="gradient"></div>
+
+  <div class="top-bar">
+    {% if logo_b64 %}
+      <img class="logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
+    {% endif %}
+    <span class="school-label">{{ school_name }}</span>
+  </div>
+
+  <div class="bottom">
+    <div class="event-eyebrow">{{ event_name }}</div>
+    <div class="headline">{{ cover_headline }}</div>
+    <div class="meta-row">
+      {% if event_date_str %}
+        <span class="date-pill">{{ event_date_str }}</span>
+      {% endif %}
+      <span class="swipe-hint">Swipe to see more →</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
