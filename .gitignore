@@ -1,1 +1,10 @@
 sce_env/
+
+.env
+
+__pycache__/
+output/
+
+assets/
+
+media/

@@ -108,7 +108,11 @@ Event type:     {event_context.get("event_type", "Unknown")}
 Summary:        {event_context.get("event_summary", "")}
 Mood:           {event_context.get("mood", "celebratory")}
 Sub-events:     {event_context.get("sub_events", [])}
-Vision notes:   {event_context.get("image_quality_notes", "")}
+Best cover image index: {event_context.get("best_cover_index", 0)}
+
+AVAILABLE PHOTOS (indexed 0 to {len(event_context.get("image_descriptions", [])) - 1})
+-------------------------------------
+{chr(10).join(f'  [{d["index"]}] {d["description"]}' for d in event_context.get("image_descriptions", []))}
 
 AVAILABLE TEMPLATES
 -------------------
@@ -119,13 +123,19 @@ YOUR TASK
 1. Select the single best template_id from the list above.
 2. Fill in every field defined in that template's `fields` object.
    - Respect max_chars limits strictly.
-   - For image_path fields: write the string "AUTO" — the pipeline will assign real images.
-   - For array fields (like `students` or `slides`): produce realistic placeholder items
-     with all sub-fields filled. Use the event context to make them feel real.
-   - For carousel templates with a `slides` array: produce 3-5 slide items.
+   - For image_path fields at the TOP LEVEL (like cover_image_path):
+     write "PHOTO_INDEX:N" where N is the index of the best matching photo from the list above.
+   - For array fields (like `slides`): produce 3-5 slide items. Each slide item that has
+     an image_path field must include "photo_index": N (integer) indicating WHICH photo
+     from the list above best matches that slide's caption. Pick different photos per slide
+     where possible. Captions must match what is actually visible in the chosen photo.
+   - For non-image fields: fill with real creative content.
 3. Write the Instagram caption (2-4 sentences, warm and proud).
 4. Select hashtags: always-on + 4-6 event-relevant ones.
 5. Specify which variants to render: {variants_instruction}.
+
+CRITICAL: Every slide caption must match what is actually in its assigned photo.
+Do not write about a pool if the assigned photo shows a photo booth.
 
 RESPONSE FORMAT
 ---------------
@@ -136,6 +146,8 @@ Respond ONLY with a JSON object — no preamble, no markdown fences:
   "variants": ["list", "of", "variants", "to", "render"],
   "filled_fields": {{
     // all fields from the template's schema, fully filled
+    // top-level image fields: "cover_image_path": "PHOTO_INDEX:0"
+    // slide items: {{"photo_index": 2, "image_path": "PHOTO_INDEX:2", "caption": "..."}}
   }},
   "caption": "full Instagram caption here",
   "hashtags": ["#tag1", "#tag2"],

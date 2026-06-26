@@ -1,0 +1,8 @@
+{
+  "school_id":   "malviya_convent_jaipur",
+  "media_dir":   "media/mcs pool party",
+  "description": "pool party on 13 May 2026 for grades 1 and 2",
+  "post_types":  ["auto"],
+  "variants":    ["all"],
+  "output_base": "output"
+}

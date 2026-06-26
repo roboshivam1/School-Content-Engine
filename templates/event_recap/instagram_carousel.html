@@ -5,6 +5,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="{{ fonts.google_fonts_url }}" rel="stylesheet">
 <style>
+  /* ── All Jinja2 interpolation lives ONLY in :root — rest is pure CSS ── */
   :root {
     --c-primary:      {{ colors.primary }};
     --c-primary-dark: {{ colors.primary_dark }};
@@ -19,148 +20,189 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-  body { width: 1080px; height: 1080px; overflow: hidden; }
+  
+  /* Instagram Post Dimensions */
+  body { width: 1080px; height: 1080px; overflow: hidden; background: var(--c-primary-dark); }
 
   .slide {
     width: 1080px;
     height: 1080px;
-    display: flex;
-    flex-direction: column;
-    font-family: var(--f-body);
-    background: var(--c-primary-dark);
-  }
-
-  /* Top photo panel — 60% of height */
-  .photo-panel {
     position: relative;
-    width: 1080px;
-    height: 648px;
-    flex-shrink: 0;
     overflow: hidden;
+    font-family: var(--f-body);
   }
 
-  .photo-panel img {
+  /* 1. Full Bleed Image (Replacing the 60% top box) */
+  .hero {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
+    z-index: 1;
   }
 
-  .photo-fallback {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-dark) 100%);
-  }
-
-  /* Subtle logo watermark top-left */
-  .photo-logo {
+  .hero-fallback {
     position: absolute;
-    top: 24px;
-    left: 24px;
-    height: 52px;
-    width: auto;
+    inset: 0;
+    background: linear-gradient(135deg, var(--c-primary-dark) 0%, var(--c-primary) 100%);
+    z-index: 1;
+  }
+
+  /* Subtle vignette for text readability across the whole image */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+    z-index: 2;
+  }
+
+  /* 2. Floating Top UI (Logo & Slide Counter) */
+  .top-bar {
+    position: absolute;
+    top: 40px; 
+    left: 40px; 
+    right: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+  }
+
+  /* Isolated Logo Pill */
+  .logo-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 12px;
+    border-radius: 100px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+
+  .logo {
+    height: 48px;
+    width: 48px;
     object-fit: contain;
-    filter: drop-shadow(0 1px 6px rgba(0,0,0,0.5));
-    opacity: 0.9;
   }
 
-  /* Slide number badge top-right */
+  /* Frosted Slide Counter */
   .slide-badge {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    background: var(--c-accent);
-    color: var(--c-text-dark);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--c-white);
     font-family: var(--f-label);
     font-weight: 700;
-    font-size: 17px;
-    padding: 6px 16px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    padding: 12px 24px;
     border-radius: 100px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
   }
 
-  /* Bottom content panel — remaining 40% */
-  .content-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 36px 52px 28px;
-    position: relative;
+  /* 3. Glassmorphic Content Card (Replacing the solid bottom block) */
+  .content-card {
+    position: absolute;
+    bottom: 40px; 
+    left: 40px; 
+    right: 40px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 32px;
+    padding: 48px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    z-index: 10;
+    overflow: hidden;
   }
 
-  /* Left accent bar inside content panel */
-  .content-panel::before {
+  /* Top accent line inside the glass card */
+  .content-card::before {
     content: '';
     position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 6px;
-    background: linear-gradient(to bottom, var(--c-accent), var(--c-primary));
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--c-accent), var(--c-primary));
   }
 
   .caption {
     font-family: var(--f-body);
     font-weight: 400;
-    font-size: 32px;
+    font-size: 34px;
     line-height: 1.5;
     color: var(--c-white);
-    margin-bottom: 24px;
-    max-width: 880px;
+    margin-bottom: 32px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
   }
 
+  /* Modernized emphasis styling */
   .caption em {
-    font-style: italic;
-    color: var(--c-secondary);
-    font-family: var(--f-headline);
+    font-style: normal;
+    font-weight: 700;
+    color: var(--c-accent);
   }
 
   .bottom-strip {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 24px;
   }
 
   .school-name {
     font-family: var(--f-label);
-    font-weight: 500;
-    font-size: 16px;
+    font-weight: 600;
+    font-size: 15px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
+    color: rgba(255,255,255,0.7);
   }
 
   .swipe-hint {
+    color: rgba(255,255,255,0.9);
     font-family: var(--f-label);
+    font-weight: 700;
     font-size: 15px;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--c-accent);
-    opacity: 0.85;
   }
 </style>
 </head>
 <body>
 <div class="slide">
+  
+  {% if image_b64 %}
+    <img class="hero" src="{{ image_b64 }}" alt="Event moment">
+  {% else %}
+    <div class="hero-fallback"></div>
+  {% endif %}
 
-  <!-- Photo panel -->
-  <div class="photo-panel">
-    {% if image_b64 %}
-      <img src="{{ image_b64 }}" alt="Event moment">
-    {% else %}
-      <div class="photo-fallback"></div>
-    {% endif %}
+  <div class="vignette"></div>
 
+  <div class="top-bar">
     {% if logo_b64 %}
-      <img class="photo-logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
-    {% endif %}
+      <div class="logo-pill">
+        <img class="logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
+      </div>
+    {% else %}
+      <div></div> {% endif %}
 
     {% if slide_number and total_slides %}
       <span class="slide-badge">{{ slide_number }} / {{ total_slides }}</span>
     {% endif %}
   </div>
 
-  <!-- Content panel -->
-  <div class="content-panel">
+  <div class="content-card">
     <p class="caption">{{ caption }}</p>
+    
     <div class="bottom-strip">
       <span class="school-name">{{ school_name }}</span>
       {% if slide_number and total_slides and slide_number < total_slides %}
