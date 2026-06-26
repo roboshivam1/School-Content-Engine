@@ -54,6 +54,7 @@ def load_job_file(path: str = None) -> dict:
     job.setdefault("post_types",  ["auto"])
     job.setdefault("variants",    ["all"])
     job.setdefault("output_base", "output")
+    job.setdefault("design_set",  "auto")
     job.setdefault("dry_run",     False)
 
     return job
@@ -74,15 +75,23 @@ def run_pipeline(job: dict) -> dict:
     output_base = job["output_base"]
     dry_run     = job.get("dry_run", False)
 
+    school_config = load_config(school_id)
+
+    # ── Resolve design_set ────────────────────────────────────────────────────
+    # Priority: job.json → school config → hardcoded fallback
+    design_set = job.get("design_set", "auto")
+    if design_set == "auto":
+        design_set = school_config.get("design_set", "glassmorphism")
+
     print(f"\n{'='*55}")
     print(f"  JARVIS Content Agent")
     print(f"  School  : {school_id}")
+    print(f"  Design  : {design_set}")
     print(f"  Job     : {description[:55]}...")
     print(f"  Dry run : {dry_run}")
     print(f"{'='*55}\n")
 
-    school_config = load_config(school_id)
-    client        = anthropic.Anthropic()
+    client = anthropic.Anthropic()
 
     content_job = ContentJob(
         school_id=school_id,
@@ -141,6 +150,7 @@ def run_pipeline(job: dict) -> dict:
         vision_result=vision_result,
         job_id=content_job.job_id,
         base_output_dir=str(school_output),
+        design_set=design_set,
     )
 
     # ── Save job summary ──────────────────────────────────────────────────────
@@ -148,6 +158,7 @@ def run_pipeline(job: dict) -> dict:
         "job_id":        content_job.job_id,
         "school_id":     school_id,
         "description":   description,
+        "design_set":    design_set,
         "template_used": content_result["template_id"],
         "reasoning":     content_result.get("reasoning", ""),
         "output_dir":    render_result["output_dir"],

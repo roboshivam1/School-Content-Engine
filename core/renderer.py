@@ -18,19 +18,33 @@ VARIANT_DIMENSIONS = {
 }
 
 
-def render_slide(template_id: str, variant: str, render_data: dict, output_path: str) -> str:
+def render_slide(
+    template_id:  str,
+    variant:      str,
+    render_data:  dict,
+    output_path:  str,
+    design_set:   str = "glassmorphism",
+) -> str:
     """
     Render one slide.
       template_id  — e.g. "event_recap"
       variant      — e.g. "instagram_square"
       render_data  — merged dict from school config + AI filled fields + resolved b64 assets
       output_path  — where the PNG is saved
+      design_set   — e.g. "glassmorphism", "minimalism"
 
     Returns the output_path on success.
     """
-    template_path = BASE_DIR / "templates" / template_id / f"{variant}.html"
+    template_path = BASE_DIR / "templates" / design_set / template_id / f"{variant}.html"
+
+    # Fallback to glassmorphism if design set doesn't have this template
     if not template_path.exists():
-        raise FileNotFoundError(f"Template not found: {template_path}")
+        fallback = BASE_DIR / "templates" / "glassmorphism" / template_id / f"{variant}.html"
+        if fallback.exists():
+            print(f"[renderer] Falling back to glassmorphism for {template_id}/{variant}")
+            template_path = fallback
+        else:
+            raise FileNotFoundError(f"Template not found: {template_path}")
 
     width, height = VARIANT_DIMENSIONS.get(variant, (1080, 1080))
 
@@ -53,7 +67,13 @@ def render_slide(template_id: str, variant: str, render_data: dict, output_path:
     return output_path
 
 
-def render_carousel(template_id: str, variant: str, slides_data: list[dict], output_dir: str) -> list[str]:
+def render_carousel(
+    template_id:  str,
+    variant:      str,
+    slides_data:  list[dict],
+    output_dir:   str,
+    design_set:   str = "glassmorphism",
+) -> list[str]:
     """
     Render multiple slides for a carousel.
     slides_data — list of render_data dicts, one per slide.
@@ -63,6 +83,6 @@ def render_carousel(template_id: str, variant: str, slides_data: list[dict], out
     for i, render_data in enumerate(slides_data):
         slide_num = i + 1
         out = str(Path(output_dir) / f"slide_{slide_num:02d}.png")
-        render_slide(template_id, variant, render_data, out)
+        render_slide(template_id, variant, render_data, out, design_set)
         paths.append(out)
     return paths

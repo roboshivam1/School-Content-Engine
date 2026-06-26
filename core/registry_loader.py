@@ -40,9 +40,35 @@ def load_all_schemas() -> dict:
     return schemas
 
 
-def get_template_path(template_id: str, variant: str) -> Path:
-    """Return the filesystem path to a specific template variant HTML file."""
-    path = BASE_DIR / "templates" / template_id / f"{variant}.html"
-    if not path.exists():
-        raise FileNotFoundError(f"Template not found: {path}")
-    return path
+def get_template_path(template_id: str, variant: str, design_set: str) -> Path:
+    """
+    Return the filesystem path to a specific template variant HTML file.
+    Looks in: templates/<design_set>/<template_id>/<variant>.html
+
+    If the requested design_set doesn't have this template yet,
+    falls back to 'glassmorphism' so the pipeline never crashes mid-job.
+    """
+    path = BASE_DIR / "templates" / design_set / template_id / f"{variant}.html"
+    if path.exists():
+        return path
+
+    # Fallback to glassmorphism if design set is missing this template
+    fallback = BASE_DIR / "templates" / "glassmorphism" / template_id / f"{variant}.html"
+    if fallback.exists():
+        print(f"[registry_loader] WARNING: '{design_set}/{template_id}/{variant}.html' not found — falling back to glassmorphism")
+        return fallback
+
+    raise FileNotFoundError(
+        f"Template not found: {path}\n"
+        f"Make sure '{design_set}/{template_id}/{variant}.html' exists, "
+        f"or that the glassmorphism fallback has it."
+    )
+
+
+def list_design_sets() -> list[str]:
+    """Return all available design set names (subfolder names under templates/)."""
+    return [
+        d.name for d in (BASE_DIR / "templates").iterdir()
+        if d.is_dir() and not d.name.startswith("_")
+        and any(d.rglob("*.html"))  # only folders that actually contain HTML
+    ]

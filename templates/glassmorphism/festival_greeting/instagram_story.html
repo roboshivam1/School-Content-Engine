@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="{{ fonts.google_fonts_url }}" rel="stylesheet">
+<style>
+  /* ── All Jinja2 interpolation lives ONLY in :root ── */
+  :root {
+    --c-primary:      {{ colors.primary }};
+    --c-primary-dark: {{ colors.primary_dark }};
+    --c-secondary:    {{ colors.secondary }};
+    --c-accent:       {{ colors.accent }};
+    --c-white:        {{ colors.white }};
+    --c-text-dark:    {{ colors.text_dark }};
+    --f-headline: '{{ fonts.headline }}', serif;
+    --f-body:     '{{ fonts.body }}', sans-serif;
+    --f-label:    '{{ fonts.label }}', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  
+  /* Story Dimensions */
+  body { width: 1080px; height: 1920px; overflow: hidden; background: var(--c-primary-dark); }
+
+  .slide {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    overflow: hidden;
+    font-family: var(--f-body);
+  }
+
+  /* 1. Cinematic Full-Bleed Background */
+  .hero {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+  }
+
+  /* Rich fallback gradient stretched for tall format */
+  .hero-fallback {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, var(--c-primary) 0%, var(--c-primary-dark) 55%, #1a0515 100%);
+    z-index: 1;
+  }
+
+  /* Deep top/bottom vignette to protect UI elements */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom, 
+      rgba(0,0,0,0.6) 0%, 
+      transparent 20%, 
+      transparent 70%, 
+      rgba(0,0,0,0.8) 100%
+    );
+    z-index: 2;
+  }
+
+  /* 2. Floating Story Top Brand Pill */
+  .top-bar {
+    position: absolute;
+    top: 64px; 
+    left: 60px; 
+    right: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 10;
+  }
+
+  .brand-pill {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 16px 32px 16px 20px;
+    border-radius: 100px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  }
+
+  .logo {
+    height: 64px;
+    width: 64px;
+    object-fit: contain;
+  }
+
+  .school-label {
+    font-family: var(--f-label);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--c-white);
+  }
+
+  /* 3. Towering Center Glass Feature Card */
+  .center-card {
+    position: absolute;
+    top: 320px;
+    bottom: 200px;
+    left: 60px;
+    right: 60px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 64px;
+    padding: 100px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+    z-index: 10;
+  }
+
+  /* Structural top accent line */
+  .center-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 10px;
+    background: linear-gradient(90deg, var(--c-accent), var(--c-primary));
+  }
+
+  /* 4. Scaled Typography for 1920 Height */
+  .festival-label {
+    font-family: var(--f-label);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--c-accent);
+    margin-bottom: 32px;
+  }
+
+  .festival-name {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 112px;
+    line-height: 1.1;
+    color: var(--c-white);
+    margin-bottom: 16px;
+    text-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  }
+
+  .year {
+    font-family: var(--f-label);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--c-white);
+    letter-spacing: 8px;
+    opacity: 0.8;
+    margin-bottom: 56px;
+  }
+
+  /* 5. Minimal Divider (Upscaled) */
+  .deco-divider {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 56px;
+    opacity: 0.8;
+  }
+  
+  .deco-line { 
+    width: 80px; 
+    height: 2px; 
+    background: linear-gradient(90deg, transparent, var(--c-accent)); 
+  }
+  
+  .deco-line.right {
+    background: linear-gradient(270deg, transparent, var(--c-accent)); 
+  }
+
+  .deco-diamond {
+    width: 12px; height: 12px;
+    background: var(--c-accent);
+    transform: rotate(45deg);
+    box-shadow: 0 0 16px var(--c-accent);
+  }
+
+  .greeting {
+    font-family: var(--f-body);
+    font-size: 36px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.85);
+    max-width: 800px;
+    margin-bottom: 32px;
+  }
+
+  .hindi-greeting {
+    font-family: var(--f-body);
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 1.5;
+    color: var(--c-accent);
+    margin-bottom: 0;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  
+  {% if hero_image_b64 %}
+    <img class="hero" src="{{ hero_image_b64 }}" alt="Festival Background">
+  {% else %}
+    <div class="hero-fallback"></div>
+  {% endif %}
+
+  <div class="vignette"></div>
+
+  <div class="top-bar">
+    <div class="brand-pill">
+      {% if logo_b64 %}
+        <img class="logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
+      {% endif %}
+      <span class="school-label">{{ school_name }}</span>
+    </div>
+  </div>
+
+  <div class="center-card">
+    <div class="festival-label">Warm Wishes</div>
+    
+    <div class="festival-name">{{ festival_name }}</div>
+    
+    {% if year %}
+      <div class="year">{{ year }}</div>
+    {% endif %}
+
+    <div class="deco-divider">
+      <div class="deco-line"></div>
+      <div class="deco-diamond"></div>
+      <div class="deco-line right"></div>
+    </div>
+
+    <div class="greeting">{{ greeting_line }}</div>
+
+    {% if hindi_greeting %}
+      <div class="hindi-greeting">{{ hindi_greeting }}</div>
+    {% endif %}
+  </div>
+
+</div>
+</body>
+</html>

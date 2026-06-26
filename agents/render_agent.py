@@ -119,11 +119,12 @@ def make_output_dir(base_output: str, job_id: str, event_type: str) -> str:
 # ── Main render agent ─────────────────────────────────────────────────────────
 
 def run_render_agent(
-    school_config:  dict,
-    content_result: dict,
-    vision_result:  dict,
-    job_id:         str,
+    school_config:   dict,
+    content_result:  dict,
+    vision_result:   dict,
+    job_id:          str,
     base_output_dir: str = "output",
+    design_set:      str = "glassmorphism",
 ) -> dict:
     """
     Full render agent run:
@@ -185,10 +186,8 @@ def run_render_agent(
             total = len(slides_data) + 2  # cover + inner + closing
 
             # ── Cover slide ───────────────────────────────────────────────────
-            # Explicitly pick the best cover image — don't rely on resolve chain
             cover_image_b64 = render_data.get("cover_image_b64", "")
             if not cover_image_b64 and best_paths:
-                # Use best_cover_index from vision agent if available, else first
                 best_cover_index = vision_result.get("event_context", {}).get("best_cover_index", 0)
                 best_cover_index = max(0, min(best_cover_index, len(best_paths) - 1))
                 try:
@@ -203,7 +202,7 @@ def run_render_agent(
                 "total_slides":    total,
             }
             cover_path = str(variant_dir / "slide_01_cover.png")
-            render_slide(template_id, variant, cover_data, cover_path)
+            render_slide(template_id, variant, cover_data, cover_path, design_set)
             all_slide_renders = [cover_path]
 
             # ── Inner slides ──────────────────────────────────────────────────
@@ -215,9 +214,6 @@ def run_render_agent(
                     "slide_number": i + 2,
                     "total_slides": total,
                 }
-
-                # image_b64 is already resolved in slide dict via resolve_image_fields
-                # but also explicitly set it from image_path in case resolve missed it
                 img_path = slide.get("image_path", "")
                 if img_path and not slide.get("image_b64"):
                     try:
@@ -227,32 +223,31 @@ def run_render_agent(
 
                 slide_path = str(variant_dir / f"slide_{i+2:02d}.png")
                 try:
-                    render_slide(template_id, carousel_variant, slide_render_data, slide_path)
+                    render_slide(template_id, carousel_variant, slide_render_data, slide_path, design_set)
                 except FileNotFoundError:
-                    render_slide(template_id, variant, slide_render_data, slide_path)
+                    render_slide(template_id, variant, slide_render_data, slide_path, design_set)
                 all_slide_renders.append(slide_path)
 
             # ── Closing slide ─────────────────────────────────────────────────
-            # Use the last best_path as a background for the closing slide
             closing_image_b64 = ""
             if best_paths:
                 try:
                     closing_image_b64 = image_to_b64(best_paths[-1])
                 except Exception:
-                    closing_image_b64 = cover_image_b64  # reuse cover as fallback
+                    closing_image_b64 = cover_image_b64
 
             closing_data = {
                 **render_data,
                 "cover_image_b64": closing_image_b64,
                 "cover_headline":  render_data.get("closing_message", "Thank you."),
                 "event_name":      render_data.get("event_name", ""),
-                "event_date_str":  "",          # no date on closing slide
+                "event_date_str":  "",
                 "slide_number":    total,
                 "total_slides":    total,
                 "is_closing":      True,
             }
             closing_path = str(variant_dir / f"slide_{total:02d}_closing.png")
-            render_slide(template_id, variant, closing_data, closing_path)
+            render_slide(template_id, variant, closing_data, closing_path, design_set)
             all_slide_renders.append(closing_path)
 
             rendered[variant] = all_slide_renders
@@ -260,7 +255,7 @@ def run_render_agent(
         else:
             # Single image
             out_path = str(variant_dir / "post.png")
-            render_slide(template_id, variant, render_data, out_path)
+            render_slide(template_id, variant, render_data, out_path, design_set)
             rendered[variant] = [out_path]
 
     # Step 6 — save caption + hashtags

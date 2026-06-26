@@ -128,6 +128,14 @@ SCHOOL_CONFIG = {
     },
 
     # -------------------------------------------------------------------------
+    # DESIGN
+    # Which template design set to use by default for this school.
+    # Can be overridden per-job in job.json.
+    # Available sets live in templates/<design_set>/ folders.
+    # -------------------------------------------------------------------------
+    "design_set": "glassmorphism",
+
+    # -------------------------------------------------------------------------
     # TEMPLATE DEFAULTS
     # Used when building render_data — these are fallback values
     # -------------------------------------------------------------------------

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="{{ fonts.google_fonts_url }}" rel="stylesheet">
+<style>
+  /* ── All Jinja2 interpolation lives ONLY in :root ── */
+  :root {
+    --c-primary:      {{ colors.primary }};
+    --c-primary-dark: {{ colors.primary_dark }};
+    --c-secondary:    {{ colors.secondary }};
+    --c-accent:       {{ colors.accent }};
+    --c-white:        {{ colors.white }};
+    --c-off-white:    {{ colors.off_white }};
+    --c-text-dark:    {{ colors.text_dark }};
+    --f-headline: '{{ fonts.headline }}', serif;
+    --f-body:     '{{ fonts.body }}', sans-serif;
+    --f-label:    '{{ fonts.label }}', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  
+  /* Story Dimensions */
+  body { width: 1080px; height: 1920px; overflow: hidden; background: var(--c-primary-dark); }
+
+  .slide {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    overflow: hidden;
+    font-family: var(--f-body);
+  }
+
+  /* 1. Cinematic Full-Bleed Background */
+  .hero {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    z-index: 1;
+  }
+
+  /* Rich fallback gradient stretched for tall format */
+  .hero-fallback {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, var(--c-primary-dark) 0%, var(--c-primary) 100%);
+    z-index: 1;
+  }
+
+  /* Deep top/bottom vignette to protect UI elements */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom, 
+      rgba(0,0,0,0.6) 0%, 
+      transparent 15%, 
+      transparent 85%, 
+      rgba(0,0,0,0.8) 100%
+    );
+    z-index: 2;
+  }
+
+  /* 2. Standardized Floating Story Brand Pill */
+  .top-bar {
+    position: absolute;
+    top: 64px; 
+    left: 60px; 
+    right: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 10;
+  }
+
+  .brand-pill {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 16px 32px 16px 20px;
+    border-radius: 100px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  }
+
+  .logo {
+    height: 64px;
+    width: 64px;
+    object-fit: contain;
+  }
+
+  .school-label {
+    font-family: var(--f-label);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--c-white);
+  }
+
+  /* 3. Towering Glass List Container */
+  .center-card {
+    position: absolute;
+    top: 220px;
+    bottom: 80px;
+    left: 60px;
+    right: 60px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 64px;
+    padding: 64px 48px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+    z-index: 10;
+  }
+
+  /* Structural top accent line */
+  .center-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 10px;
+    background: linear-gradient(90deg, var(--c-accent), var(--c-primary));
+  }
+
+  /* Header Section */
+  .header-section {
+    text-align: center;
+    margin-bottom: 40px;
+    flex-shrink: 0;
+  }
+
+  .headline {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 72px;
+    line-height: 1.1;
+    color: var(--c-white);
+    margin-bottom: 12px;
+    text-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  }
+
+  .subheadline {
+    font-family: var(--f-body);
+    font-size: 28px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.4;
+  }
+
+  .divider {
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--c-accent), transparent);
+    margin: 32px auto 0;
+    border-radius: 4px;
+    opacity: 0.8;
+  }
+
+  /* 4. Student List Area */
+  .list-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: hidden; /* Prevents overflow if too many students are added */
+  }
+
+  /* Glass Row Design */
+  .glass-row {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 32px;
+    padding: 24px 32px;
+    gap: 28px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  /* Rank Number Badge */
+  .rank-num {
+    font-family: var(--f-headline);
+    font-weight: 800;
+    font-size: 32px;
+    color: rgba(255,255,255,0.4);
+    min-width: 48px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .row-photo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--c-accent);
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+
+  .row-photo-placeholder {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+    border: 2px dashed rgba(255,255,255,0.3);
+    flex-shrink: 0;
+  }
+
+  .row-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .row-name {
+    font-family: var(--f-body);
+    font-weight: 600;
+    font-size: 36px;
+    color: var(--c-white);
+    line-height: 1.1;
+  }
+
+  .row-class {
+    font-family: var(--f-label);
+    font-weight: 500;
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .row-score {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 48px;
+    color: var(--c-accent);
+    flex-shrink: 0;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  
+  {% if hero_image_b64 %}
+    <img class="hero" src="{{ hero_image_b64 }}" alt="Background">
+  {% else %}
+    <div class="hero-fallback"></div>
+  {% endif %}
+
+  <div class="vignette"></div>
+
+  <div class="top-bar">
+    <div class="brand-pill">
+      {% if logo_b64 %}
+        <img class="logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
+      {% endif %}
+      <span class="school-label">{{ school_name }}</span>
+    </div>
+  </div>
+
+  <div class="center-card">
+    
+    <div class="header-section">
+      <div class="headline">{{ headline }}</div>
+      {% if subheadline %}
+        <div class="subheadline">{{ subheadline }}</div>
+      {% endif %}
+      <div class="divider"></div>
+    </div>
+
+    <div class="list-area">
+      {% for student in students %}
+      <div class="glass-row">
+        
+        <span class="rank-num">{{ loop.index }}</span>
+
+        {% if student.photo_b64 %}
+          <img class="row-photo" src="{{ student.photo_b64 }}" alt="{{ student.name }}">
+        {% else %}
+          <div class="row-photo-placeholder"></div>
+        {% endif %}
+
+        <div class="row-info">
+          <span class="row-name">{{ student.name }}</span>
+          {% if student.class_section %}
+            <span class="row-class">{{ student.class_section }}</span>
+          {% endif %}
+        </div>
+
+        <span class="row-score">{{ student.score_or_rank }}</span>
+        
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,8 +1,9 @@
 {
   "school_id":   "malviya_convent_jaipur",
-  "media_dir":   "media/mcs pool party",
-  "description": "pool party on 13 May 2026 for grades 1 and 2",
+  "media_dir":   "./media/result_test_photo",
+  "description": "John Doe of class 11th science secured first rank in national chess championship held in Delhi, India on 20th may 2026",
   "post_types":  ["auto"],
   "variants":    ["all"],
+  "design_set":  "glassmorphism",
   "output_base": "output"
 }

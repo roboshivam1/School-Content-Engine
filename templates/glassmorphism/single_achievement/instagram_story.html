@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="{{ fonts.google_fonts_url }}" rel="stylesheet">
+<style>
+  /* ── All Jinja2 interpolation lives ONLY in :root ── */
+  :root {
+    --c-primary:      {{ colors.primary }};
+    --c-primary-dark: {{ colors.primary_dark }};
+    --c-secondary:    {{ colors.secondary }};
+    --c-accent:       {{ colors.accent }};
+    --c-white:        {{ colors.white }};
+    --c-off-white:    {{ colors.off_white }};
+    --c-text-dark:    {{ colors.text_dark }};
+    --f-headline: '{{ fonts.headline }}', serif;
+    --f-body:     '{{ fonts.body }}', sans-serif;
+    --f-label:    '{{ fonts.label }}', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  
+  /* Story Dimensions */
+  body { width: 1080px; height: 1920px; overflow: hidden; background: var(--c-primary-dark); }
+
+  .slide {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    overflow: hidden;
+    font-family: var(--f-body);
+  }
+
+  /* 1. Cinematic Full-Bleed Background */
+  .hero {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+  }
+
+  /* Rich fallback gradient stretched for tall format */
+  .hero-fallback {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, var(--c-primary) 0%, var(--c-primary-dark) 55%, #1a0515 100%);
+    z-index: 1;
+  }
+
+  /* Deep top/bottom vignette to protect UI elements */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom, 
+      rgba(0,0,0,0.6) 0%, 
+      transparent 20%, 
+      transparent 80%, 
+      rgba(0,0,0,0.8) 100%
+    );
+    z-index: 2;
+  }
+
+  /* 2. Floating Story Top Brand Pill */
+  .top-bar {
+    position: absolute;
+    top: 64px; 
+    left: 60px; 
+    right: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 10;
+  }
+
+  .brand-pill {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 16px 32px 16px 20px;
+    border-radius: 100px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  }
+
+  .logo {
+    height: 64px;
+    width: 64px;
+    object-fit: contain;
+  }
+
+  .school-label {
+    font-family: var(--f-label);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--c-white);
+  }
+
+  /* 3. Towering Center Glass Feature Card */
+  .center-card {
+    position: absolute;
+    top: 480px; /* Pushed down heavily for the massive top photo */
+    bottom: 120px;
+    left: 60px;
+    right: 60px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 64px;
+    padding: 260px 60px 60px; /* High top padding makes room for the photo */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+    z-index: 10;
+  }
+
+  /* Structural top accent line */
+  .center-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 10px;
+    background: linear-gradient(90deg, var(--c-accent), var(--c-primary));
+  }
+
+  /* 4. Breaking the Grid: Upscaled Intersecting Photo */
+  .photo-wrap {
+    position: absolute;
+    top: -220px; /* Pulls the photo up out of the glass box */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 440px;
+    height: 440px;
+    border-radius: 50%;
+    border: 8px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-inner {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .photo-placeholder {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+    border: 4px dashed rgba(255,255,255,0.3);
+  }
+
+  /* Premium Star Badge */
+  .star-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--c-accent), #FFD700);
+    border-radius: 50%;
+    border: 6px solid var(--c-primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    z-index: 16;
+  }
+
+  /* 5. Typography Content Area */
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    width: 100%;
+    text-align: center;
+  }
+
+  .headline-label {
+    font-family: var(--f-label);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--c-accent);
+    margin-bottom: 24px;
+  }
+
+  .student-name {
+    font-family: var(--f-headline);
+    font-weight: 700;
+    font-size: 96px;
+    color: var(--c-white);
+    line-height: 1.1;
+    margin-bottom: 12px;
+    text-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  }
+
+  .class-section {
+    font-family: var(--f-label);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 48px;
+  }
+
+  .achievement-pill {
+    display: inline-block;
+    background: var(--c-accent);
+    color: var(--c-primary-dark);
+    font-family: var(--f-headline);
+    font-weight: 800;
+    font-size: 40px;
+    padding: 20px 48px;
+    border-radius: 100px;
+    margin-bottom: 48px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+  }
+
+  .quote {
+    font-family: var(--f-headline);
+    font-style: italic;
+    font-size: 36px;
+    color: rgba(255,255,255,0.9);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+  
+  .quote::before, .quote::after {
+    color: var(--c-accent);
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  
+  {% if hero_image_b64 %}
+    <img class="hero" src="{{ hero_image_b64 }}" alt="Spotlight Background">
+  {% else %}
+    <div class="hero-fallback"></div>
+  {% endif %}
+
+  <div class="vignette"></div>
+
+  <div class="top-bar">
+    <div class="brand-pill">
+      {% if logo_b64 %}
+        <img class="logo" src="{{ logo_b64 }}" alt="{{ school_name }}">
+      {% endif %}
+      <span class="school-label">{{ school_name }}</span>
+    </div>
+  </div>
+
+  <div class="center-card">
+    
+    <div class="photo-wrap">
+      {% if photo_b64 %}
+        <img class="photo-inner" src="{{ photo_b64 }}" alt="{{ student_name }}">
+      {% else %}
+        <div class="photo-placeholder"></div>
+      {% endif %}
+      <div class="star-badge">⭐</div>
+    </div>
+
+    <div class="card-content">
+      <div class="headline-label">{{ headline }}</div>
+      
+      <div class="student-name">{{ student_name }}</div>
+      
+      {% if class_section %}
+        <div class="class-section">{{ class_section }}</div>
+      {% endif %}
+      
+      <div class="achievement-pill">{{ achievement }}</div>
+      
+      {% if quote %}
+        <div class="quote">"{{ quote }}"</div>
+      {% endif %}
+    </div>
+    
+  </div>
+
+</div>
+</body>
+</html>
