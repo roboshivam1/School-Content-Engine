@@ -354,7 +354,6 @@ output/<school_id>/<job_id>__<event>/
 | School | Config | Design set |
 |---|---|---|
 | Malviya Convent School, Jaipur | `malviya_convent_jaipur.py` | glassmorphism |
-| M.S.M.S. Vidyalaya, Jaipur | `msmsv_jaipur.py` | dark_luxury (falls back to glassmorphism) |
 
 ---
 
