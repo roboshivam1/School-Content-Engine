@@ -1,7 +1,7 @@
 {
-  "school_id":   "malviya_convent_jaipur",
-  "media_dir":   "./media/result_test_photo",
-  "description": "John Doe of class 11th science secured first rank in national chess championship held in Delhi, India on 20th may 2026",
+  "school_id":   "msmsv_jaipur",
+  "media_dir":   "./media/msmsv_earth_day",
+  "description": "Students of Bal Vatika (pre-primary unit) celebrated Earth Day.",
   "post_types":  ["auto"],
   "variants":    ["all"],
   "design_set":  "glassmorphism",
