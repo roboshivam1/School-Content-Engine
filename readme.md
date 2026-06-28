@@ -1,4 +1,4 @@
-> *"Stopping advertising to save money is like stopping your watch to save time."
+> *"Stopping advertising to save money is like stopping your watch to save time."*
 ---
 # JARVIS Content Agent
 
