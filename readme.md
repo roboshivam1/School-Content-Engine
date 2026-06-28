@@ -1,3 +1,5 @@
+> *"Stopping advertising to save money is like stopping your watch to save time."
+---
 # JARVIS Content Agent
 
 An AI-powered social media content generation pipeline for Indian schools. Takes raw event photos, understands what happened, designs branded carousels and posts, and delivers ready-to-upload content — automatically.
@@ -5,7 +7,6 @@ An AI-powered social media content generation pipeline for Indian schools. Takes
 Built as a standalone agent that plugs into the JARVIS multi-agent system.
 
 ---
-> *"Stopping advertising to save money is like stopping your watch to save time."
 
 ## What it does
 
